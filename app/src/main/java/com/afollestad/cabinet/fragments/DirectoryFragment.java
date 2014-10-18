@@ -261,9 +261,9 @@ public class DirectoryFragment extends Fragment implements FileAdapter.IconClick
             assert search != null;
             SearchView searchView = (SearchView) search.getActionView();
             // TODO uncomment if statement for Material
-//            if (Build.VERSION.SDK_INT < 20) {
-//                themeSearchView(searchView);
-//            }
+            if (Build.VERSION.SDK_INT < 20) {
+                themeSearchView(searchView);
+            }
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -507,11 +507,7 @@ public class DirectoryFragment extends Fragment implements FileAdapter.IconClick
         RecyclerView mRecyclerView = (RecyclerView) view.findViewById(android.R.id.list);
         mRecyclerView.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true, new RecyclerView.OnScrollListener() {
             @Override
-            public void onScrollStateChanged(int scrollState) {
-            }
-
-            @Override
-            public void onScrolled(int dx, int dy) {
+            public void onScrolled(RecyclerView view, int dx, int dy) {
                 if (dy < 0) {
                     if (dy < -5) {
                         ((DrawerActivity) getActivity()).toggleFab(false);

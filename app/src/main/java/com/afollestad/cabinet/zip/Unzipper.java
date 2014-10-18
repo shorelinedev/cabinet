@@ -14,6 +14,7 @@ import java.io.BufferedOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.List;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -27,11 +28,14 @@ public class Unzipper {
         ZipEntry entry;
         while ((entry = zis.getNextEntry()) != null) {
             log("Entry: " + entry.getName() + ", size: " + entry.getSize());
+            if(entry.getName().toLowerCase(Locale.getDefault()).endsWith(".ds_store") ||
+                    entry.getName().startsWith("__MACOSX"))
+                continue;
             File dest = new LocalFile(context.getActivity(), new java.io.File(context.getDirectory().getPath() + "/" + entry.getName()));
             dest = Utils.checkDuplicatesSync(context.getActivity(), dest);
             log("Unzipping: " + dest.getPath());
             log("Creating directory: " + dest.toJavaFile().getParentFile().getAbsolutePath());
-            dest.toJavaFile().getParentFile().mkdirs();
+            dest.toJavaFile().getParentFile().mkdir();
             int size;
             byte[] buffer = new byte[2048];
             FileOutputStream fos = new FileOutputStream(dest.toJavaFile());

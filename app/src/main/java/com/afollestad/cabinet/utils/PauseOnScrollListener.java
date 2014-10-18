@@ -5,7 +5,7 @@ import android.widget.AbsListView;
 
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-public class PauseOnScrollListener implements RecyclerView.OnScrollListener {
+public class PauseOnScrollListener extends RecyclerView.OnScrollListener {
 
     private ImageLoader imageLoader;
 
@@ -42,7 +42,7 @@ public class PauseOnScrollListener implements RecyclerView.OnScrollListener {
     }
 
     @Override
-    public void onScrollStateChanged(int scrollState) {
+    public void onScrollStateChanged(RecyclerView view, int scrollState) {
         switch (scrollState) {
             default:
                 throw new RuntimeException("Unknown scroll state: " + scrollState);
@@ -61,14 +61,14 @@ public class PauseOnScrollListener implements RecyclerView.OnScrollListener {
                 break;
         }
         if (externalListener != null) {
-            externalListener.onScrollStateChanged(scrollState);
+            externalListener.onScrollStateChanged(view, scrollState);
         }
     }
 
     @Override
-    public void onScrolled(int dx, int dy) {
+    public void onScrolled(RecyclerView view, int dx, int dy) {
         if (externalListener != null) {
-            externalListener.onScrolled(dx, dy);
+            externalListener.onScrolled(view, dx, dy);
         }
     }
 }
