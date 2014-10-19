@@ -9,9 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.MenuItemCompat;
@@ -20,9 +18,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ImageSpan;
 import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -31,7 +26,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -65,8 +59,6 @@ import com.afollestad.cabinet.zip.Unzipper;
 import com.afollestad.cabinet.zip.Zipper;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -263,9 +255,6 @@ public class DirectoryFragment extends Fragment implements FileAdapter.IconClick
         if (canShow && !searchMode) {
             assert search != null;
             SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
-            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
-                themeSearchView(searchView);
-            }
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String query) {
@@ -280,36 +269,6 @@ public class DirectoryFragment extends Fragment implements FileAdapter.IconClick
                 }
             });
         } else search.setVisible(false);
-    }
-
-    private void themeSearchView(SearchView searchView) {
-        // The background and text color
-        View searchPlate = searchView.findViewById(searchView.getContext().getResources().getIdentifier("android:id/search_plate", null, null));
-        EditText searchEditText = (EditText) searchView.findViewById(searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null));
-        searchEditText.setTextColor(getResources().getColor(android.R.color.white));
-        searchPlate.setBackgroundResource(Utils.resolveDrawable(getActivity(), android.R.attr.editTextBackground));
-        try {
-            // The close 'X' icon
-            Field searchField = SearchView.class.getDeclaredField("mCloseButton");
-            searchField.setAccessible(true);
-            ImageView closeBtn = (ImageView) searchField.get(searchView);
-            closeBtn.setImageResource(R.drawable.ic_searchview_close);
-            // Search icon in hint
-            View autoComplete = searchView.findViewById(getResources().getIdentifier("android:id/search_src_text", null, null));
-            Class<?> clazz = Class.forName("android.widget.SearchView$SearchAutoComplete");
-            SpannableStringBuilder stopHint = new SpannableStringBuilder("   ");
-            stopHint.append(getString(R.string.search_files));
-            Drawable searchIcon = getResources().getDrawable(R.drawable.ic_search);
-            Method textSizeMethod = clazz.getMethod("getTextSize");
-            Float rawTextSize = (Float) textSizeMethod.invoke(autoComplete);
-            int textSize = (int) (rawTextSize * 1.25);
-            searchIcon.setBounds(0, 0, textSize, textSize);
-            stopHint.setSpan(new ImageSpan(searchIcon), 1, 2, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-            Method setHintMethod = clazz.getMethod("setHint", CharSequence.class);
-            setHintMethod.invoke(autoComplete, stopHint);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @Nullable

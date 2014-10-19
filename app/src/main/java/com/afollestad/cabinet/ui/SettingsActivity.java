@@ -7,6 +7,7 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 
 import com.afollestad.cabinet.R;
@@ -83,6 +84,14 @@ public class SettingsActivity extends ThemableActivity implements AboutDialog.Di
                 }
             });
         }
+
+        @Override
+        public void onViewCreated(View view, Bundle savedInstanceState) {
+            super.onViewCreated(view, savedInstanceState);
+            ListView list = (ListView) view.findViewById(android.R.id.list);
+            DrawerActivity.setupTranslucentTopPadding(getActivity(), list);
+            DrawerActivity.setupTranslucentBottomPadding(getActivity(), list);
+        }
     }
 
     @Override
@@ -96,11 +105,6 @@ public class SettingsActivity extends ThemableActivity implements AboutDialog.Di
         super.onCreate(savedInstanceState);
         setContentView(R.layout.preference_activity_custom);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        ListView list = (ListView) findViewById(android.R.id.list);
-        DrawerActivity.setupTranslucentTopPadding(this, list);
-        DrawerActivity.setupTranslucentBottomPadding(this, list);
-
         getFragmentManager().beginTransaction().replace(android.R.id.content, new SettingsFragment()).commit();
     }
 

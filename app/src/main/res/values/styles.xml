@@ -28,10 +28,6 @@
     <style name="Theme.CabinetTrueBlackNavStatusTranslucent" parent="@style/Theme.CabinetTrueBlack" />
 
 
-    <style name="OverflowRecoup" parent="@android:style/Widget.Holo.ActionButton.Overflow">
-        <item name="android:src">@drawable/ic_overflow</item>
-    </style>
-
     <style name="ButtonCabinet" parent="android:Widget.Holo.Light.Button">
         <item name="android:background">@drawable/rect_button_selector</item>
         <item name="android:textColor">#fff</item>
@@ -44,67 +40,6 @@
         <item name="android:textColor">#fff</item>
         <item name="android:minHeight">48dp</item>
         <item name="android:minWidth">64dp</item>
-    </style>
-
-    <style name="CheckBoxCabinet" parent="android:Widget.Holo.Light.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/cabinet_btn_check_holo_light</item>
-    </style>
-
-    <style name="CheckBoxCabinetDark" parent="android:Widget.Holo.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/cabinetdark_btn_check_holo_dark</item>
-    </style>
-
-    <style name="RadioButtonCabinet" parent="android:Widget.Holo.Light.CompoundButton.RadioButton">
-        <item name="android:button">@drawable/cabinet_btn_radio_holo_light</item>
-    </style>
-
-    <style name="RadioButtonCabinetDark" parent="android:Widget.Holo.CompoundButton.RadioButton">
-        <item name="android:button">@drawable/cabinetdark_btn_check_holo_dark</item>
-    </style>
-
-    <style name="ActionBar.Solid.Cabinet" parent="@android:style/Widget.Holo.Light.ActionBar.Solid.Inverse">
-        <item name="android:icon">@drawable/transparent</item>
-        <item name="android:background">@drawable/ab_solid_cabinet</item>
-        <item name="android:titleTextStyle">@style/ActionTitleTextStyle</item>
-    </style>
-
-    <style name="ActionBar.Solid.CabinetTrueBlack" parent="@style/ActionBar.Solid.Cabinet">
-        <item name="android:background">@drawable/ab_solid_cabinetdark</item>
-    </style>
-
-    <style name="ActionTitleTextStyle" parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
-        <item name="android:textColor">#fff</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="Theme.Cabinet.Widget.Dark" parent="@android:style/Theme.Holo">
-        <item name="android:textColorHint">@color/search_view_hint</item>
-        <item name="android:popupMenuStyle">@style/Theme.PopupMenu.Dark</item>
-        <item name="android:textColor">#fff</item>
-        <item name="android:checkboxStyle">@style/CheckBoxCabinetDark</item>
-        <item name="android:radioButtonStyle">@style/RadioButtonCabinetDark</item>
-    </style>
-
-    <style name="Theme.Cabinet.Widget" parent="@android:style/Theme.Holo.Light">
-        <item name="android:textColorHint">@color/search_view_hint</item>
-        <item name="android:popupMenuStyle">@style/Theme.PopupMenu</item>
-        <item name="android:textColor">#fff</item>
-        <item name="android:checkboxStyle">@style/CheckBoxCabinet</item>
-        <item name="android:radioButtonStyle">@style/RadioButtonCabinet</item>
-    </style>
-
-    <style name="Theme.PopupMenu" parent="@android:style/Widget.Holo.Light.PopupMenu">
-        <item name="android:dividerHeight">0dp</item>
-        <item name="android:listDivider">@null</item>
-        <item name="android:dividerVertical">@null</item>
-        <item name="android:dividerHorizontal">@null</item>
-    </style>
-
-    <style name="Theme.PopupMenu.Dark" parent="@android:style/Widget.Holo.PopupMenu">
-        <item name="android:dividerHeight">0dp</item>
-        <item name="android:listDivider">@null</item>
-        <item name="android:dividerVertical">@null</item>
-        <item name="android:dividerHorizontal">@null</item>
     </style>
 
 </resources>
