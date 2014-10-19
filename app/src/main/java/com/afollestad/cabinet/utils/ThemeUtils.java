@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import com.afollestad.cabinet.R;
 
@@ -64,6 +65,9 @@ public class ThemeUtils {
     }
 
     public int getCurrent() {
+        Log.v("THEME", "translucentStatusbar: " + translucentStatusbar);
+        Log.v("THEME", "translucentNavbar: " + translucentNavbar);
+        Log.v("THEME", "SDK: " + Build.VERSION.SDK_INT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             if (translucentNavbar) {
                 if (trueBlack) {

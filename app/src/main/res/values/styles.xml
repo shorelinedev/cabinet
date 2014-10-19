@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Cabinet" parent="@style/CabinetParent" />
+    <style name="Theme.Cabinet" parent="@style/CabinetParent">
+        <item name="android:windowBackground">@android:color/holo_green_dark</item>
+    </style>
 
-    <style name="Theme.CabinetStatusTranslucent" parent="@style/Theme.Cabinet" />
+    <style name="Theme.CabinetStatusTranslucent" parent="@style/Theme.Cabinet">
+        <item name="android:windowBackground">@android:color/holo_purple</item>
+    </style>
 
-    <style name="Theme.CabinetNavTranslucent" parent="@style/Theme.Cabinet" />
+    <style name="Theme.CabinetNavTranslucent" parent="@style/Theme.Cabinet">
+        <item name="android:windowBackground">@android:color/holo_orange_dark</item>
+    </style>
 
-    <style name="Theme.CabinetNavStatusTranslucent" parent="@style/Theme.Cabinet" />
+    <style name="Theme.CabinetNavStatusTranslucent" parent="@style/Theme.Cabinet">
+        <item name="android:windowBackground">@android:color/holo_blue_dark</item>
+    </style>
 
 
     <style name="Theme.CabinetDark" parent="@style/CabinetDarkParent" />
