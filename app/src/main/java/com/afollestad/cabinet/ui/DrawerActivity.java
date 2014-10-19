@@ -200,6 +200,7 @@ public class DrawerActivity extends NetworkedActivity implements BillingProcesso
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setupTransparentTints(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
@@ -236,7 +237,6 @@ public class DrawerActivity extends NetworkedActivity implements BillingProcesso
             }
         });
         setupTranslucentBottomMargin(this, fab, false);
-        setupTransparentTints(this);
 
         mBP = new BillingProcessor(this, "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlPBB2hP/R0PrXtK8NPeDX7QV1fvk1hDxPVbIwRZLIgO5l/ZnAOAf8y9Bq57+eO5CD+ZVTgWcAVrS/QsiqDI/MwbfXcDydSkZLJoFofOFXRuSL7mX/jNwZBNtH0UrmcyFx1RqaHIe9KZFONBWLeLBmr47Hvs7dKshAto2Iy0v18kN48NqKxlWtj/PHwk8uIQ4YQeLYiXDCGhfBXYS861guEr3FFUnSLYtIpQ8CiGjwfU60+kjRMmXEGnmhle5lqzj6QeL6m2PNrkbJ0T9w2HM+bR7buHcD8e6tHl2Be6s/j7zn1Ypco/NCbqhtPgCnmLpeYm8EwwTnH4Yei7ACR7mXQIDAQAB", this);
     }
