@@ -1,14 +1,13 @@
 package com.afollestad.cabinet.utils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.net.Uri;
@@ -23,7 +22,6 @@ import com.afollestad.cabinet.R;
 import com.afollestad.cabinet.file.CloudFile;
 import com.afollestad.cabinet.file.LocalFile;
 import com.afollestad.cabinet.file.base.File;
-import com.afollestad.cabinet.fragments.CustomDialog;
 import com.afollestad.cabinet.fragments.DirectoryFragment;
 import com.afollestad.cabinet.services.NetworkService;
 import com.afollestad.cabinet.sftp.SftpClient;
@@ -56,15 +54,6 @@ public class Utils {
         int resId = a.getResourceId(0, 0);
         a.recycle();
         return resId;
-    }
-
-    public static int getVersion(Context context) {
-        try {
-            PackageInfo info = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
-            return info.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            return -1;
-        }
     }
 
     public static void lockOrientation(Activity context) {
@@ -157,15 +146,47 @@ public class Utils {
         return PreferenceManager.getDefaultSharedPreferences(context).getBoolean("show_hidden", false);
     }
 
-    public static void showConfirmDialog(Activity context, int title, int message, String replacement, final CustomDialog.SimpleClickListener callback) {
-        CustomDialog.create(context, title, context.getString(message, replacement), R.string.yes, 0, R.string.no, callback).show(context.getFragmentManager(), "CONFIRM");
+    public interface SimpleClickListener {
+        void onPositive(int which, View view);
+    }
+
+    public interface ClickListener extends SimpleClickListener {
+        void onNeutral();
+
+        void onNegative();
+    }
+
+    public static void showConfirmDialog(Activity context, int title, int message, String replacement, final SimpleClickListener callback) {
+//        CustomDialog.create(context, title, context.getString(message, replacement), R.string.yes, 0, R.string.no, callback).show(context.getFragmentManager(), "CONFIRM");
+        new AlertDialog.Builder(context)
+                .setTitle(title)
+                .setMessage(context.getString(message, replacement))
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        callback.onPositive(which, null);
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (callback instanceof ClickListener) {
+                            ((ClickListener) callback).onNegative();
+                        }
+                    }
+                })
+                .show();
     }
 
     public static void showErrorDialog(final Activity context, final int message, final Exception e) {
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                CustomDialog.create(context, R.string.error, context.getString(message, e.getLocalizedMessage()), null).show(context.getFragmentManager(), "ERROR");
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.error)
+                        .setMessage(context.getString(message, e.getLocalizedMessage()))
+                        .create()
+                        .show();
             }
         });
     }
@@ -174,7 +195,11 @@ public class Utils {
         context.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                CustomDialog.create(context, R.string.error, message, null).show(context.getFragmentManager(), "ERROR");
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.error)
+                        .setMessage(message)
+                        .create()
+                        .show();
             }
         });
     }
@@ -194,26 +219,37 @@ public class Utils {
     }
 
     public static void showInputDialog(Activity context, int title, int hint, String prefillInput, final InputCallback callback) {
-        CustomDialog dialog = CustomDialog.create(context, title, null, 0, R.layout.dialog_input, 0, 0, android.R.string.no, new CustomDialog.SimpleClickListener() {
-            @Override
-            public void onPositive(int which, View view) {
-                if (callback != null) {
-                    EditText input = (EditText) view.findViewById(R.id.input);
-                    callback.onInput(input.getText().toString().trim());
-                }
-            }
-        });
-        final EditText input = (EditText) dialog.getInflatedView().findViewById(R.id.input);
+        final View view = context.getLayoutInflater().inflate(R.layout.dialog_input, null);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(context).setTitle(title)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                        if (callback != null) {
+                            EditText input = (EditText) view.findViewById(R.id.input);
+                            callback.onInput(input.getText().toString().trim());
+                        }
+                    }
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                })
+                .setView(view);
+        final EditText input = (EditText) view.findViewById(R.id.input);
         if (hint != 0) input.setHint(hint);
         if (prefillInput != null) input.append(prefillInput);
-        dialog.setDismissListener(new CustomDialog.DismissListener() {
+        AlertDialog alert = dialog.create();
+        alert.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
-            public void onDismiss() {
+            public void onDismiss(DialogInterface dialog) {
                 if (callback instanceof InputCancelCallback)
                     ((InputCancelCallback) callback).onCancel();
             }
         });
-        dialog.show(context.getFragmentManager(), "INPUT_DIALOG");
+        alert.show();
     }
 
     private static boolean cancelledDownload;
@@ -311,30 +347,32 @@ public class Utils {
             mime = "text/plain";
         }
         if (mime == null) {
-            CustomDialog.create(context, R.string.open_as, R.array.open_as_array, new CustomDialog.SimpleClickListener() {
-                @Override
-                public void onPositive(int which, View view) {
-                    String newMime;
-                    switch (which) {
-                        default:
-                            newMime = "text/*";
-                            break;
-                        case 1:
-                            newMime = "image/*";
-                            break;
-                        case 2:
-                            newMime = "audio/*";
-                            break;
-                        case 3:
-                            newMime = "video/*";
-                            break;
-                        case 4:
-                            newMime = "*/*";
-                            break;
-                    }
-                    openLocal(context, file, newMime, remoteSource);
-                }
-            }).show(context.getFragmentManager(), "OPEN_AS_DIALOG");
+            new AlertDialog.Builder(context)
+                    .setTitle(R.string.open_as)
+                    .setItems(R.array.open_as_array, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            String newMime;
+                            switch (which) {
+                                default:
+                                    newMime = "text/*";
+                                    break;
+                                case 1:
+                                    newMime = "image/*";
+                                    break;
+                                case 2:
+                                    newMime = "audio/*";
+                                    break;
+                                case 3:
+                                    newMime = "video/*";
+                                    break;
+                                case 4:
+                                    newMime = "*/*";
+                                    break;
+                            }
+                            openLocal(context, file, newMime, remoteSource);
+                        }
+                    }).create().show();
             return;
         }
         try {

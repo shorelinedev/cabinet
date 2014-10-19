@@ -3,8 +3,8 @@ package com.afollestad.cabinet.cab;
 import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.net.Uri;
-import android.util.Log;
 import android.support.v7.view.ActionMode;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -13,8 +13,8 @@ import android.widget.Toast;
 import com.afollestad.cabinet.R;
 import com.afollestad.cabinet.cab.base.BaseFileCab;
 import com.afollestad.cabinet.file.base.File;
-import com.afollestad.cabinet.fragments.CustomDialog;
 import com.afollestad.cabinet.sftp.SftpClient;
+import com.afollestad.cabinet.utils.Utils;
 import com.afollestad.cabinet.zip.Unzipper;
 import com.afollestad.cabinet.zip.Zipper;
 
@@ -91,16 +91,16 @@ public class MainCab extends BaseFileCab {
                     .setFragment(getFragment()).setFiles(getFiles()).start());
             return super.onActionItemClicked(actionMode, menuItem);
         } else if (menuItem.getItemId() == R.id.delete) {
-            CustomDialog.create(getContext(), R.string.delete, getFiles().size() == 1 ?
-                            getContext().getString(R.string.confirm_delete, getFiles().get(0).getName()) :
-                            getContext().getString(R.string.confirm_delete_xfiles, getFiles().size()), R.string.yes, 0, R.string.no,
-                    new CustomDialog.SimpleClickListener() {
+            Utils.showConfirmDialog(getContext(), R.string.delete,
+                    getFiles().size() == 1 ? R.string.confirm_delete : R.string.confirm_delete_xfiles,
+                    getFiles().size() == 1 ? getFiles().get(0).getName() : getFiles().size() + "",
+                    new Utils.SimpleClickListener() {
                         @Override
                         public void onPositive(int which, View view) {
                             deleteNextFile();
                         }
                     }
-            ).show(getContext().getFragmentManager(), "DELETE_CONFIRM");
+            );
             return false;
         } else if (menuItem.getItemId() == R.id.selectAll) {
             List<File> newSelected = getFragment().mAdapter.checkAll();

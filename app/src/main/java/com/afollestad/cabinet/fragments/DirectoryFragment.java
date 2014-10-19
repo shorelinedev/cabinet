@@ -1,10 +1,12 @@
 package com.afollestad.cabinet.fragments;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.ActivityNotFoundException;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.drawable.Drawable;
@@ -449,14 +451,22 @@ public class DirectoryFragment extends Fragment implements FileAdapter.IconClick
                                     runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            CustomDialog.create(getActivity(), R.string.file_already_exists, getString(R.string.file_already_exists_warning),
-                                                    android.R.string.ok, 0, android.R.string.cancel, new CustomDialog.SimpleClickListener() {
+                                            new AlertDialog.Builder(getActivity())
+                                                    .setTitle(R.string.file_already_exists)
+                                                    .setMessage(R.string.file_already_exists_warning)
+                                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                                         @Override
-                                                        public void onPositive(int which, View view) {
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.dismiss();
                                                             createNewFileDuplicate(context, newFile);
                                                         }
-                                                    }
-                                            ).show(getFragmentManager(), "DUPLICATE_WARNING");
+                                                    })
+                                                    .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                                        @Override
+                                                        public void onClick(DialogInterface dialog, int which) {
+                                                            dialog.dismiss();
+                                                        }
+                                                    }).create().show();
                                         }
                                     });
                                 }
@@ -480,22 +490,25 @@ public class DirectoryFragment extends Fragment implements FileAdapter.IconClick
                 ((BaseFileCab) ((DrawerActivity) getActivity()).getCab()).paste();
             } else {
                 final Activity context = getActivity();
-                CustomDialog.create(getActivity(), R.string.newStr, R.array.new_options, new CustomDialog.SimpleClickListener() {
-                    @Override
-                    public void onPositive(int which, View view) {
-                        switch (which) {
-                            case 0: // File
-                                showNewFileDialog(context);
-                                break;
-                            case 1: // Folder
-                                showNewFolderDialog(context);
-                                break;
-                            case 2: // Remote connection
-                                new RemoteConnectionDialog(context).show();
-                                break;
-                        }
-                    }
-                }).show(getActivity().getFragmentManager(), "NEW_DIALOG");
+                new AlertDialog.Builder(context)
+                        .setTitle(R.string.newStr)
+                        .setItems(R.array.new_options, new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                switch (which) {
+                                    case 0: // File
+                                        showNewFileDialog(context);
+                                        break;
+                                    case 1: // Folder
+                                        showNewFolderDialog(context);
+                                        break;
+                                    case 2: // Remote connection
+                                        new RemoteConnectionDialog(context).show();
+                                        break;
+                                }
+                            }
+                        }).create().show();
             }
         }
     }
@@ -916,24 +929,23 @@ public class DirectoryFragment extends Fragment implements FileAdapter.IconClick
                     final File fFile = file;
                     ContextThemeWrapper context = new ContextThemeWrapper(getActivity(),
                             new ThemeUtils(getActivity(), true).getCurrent());
-                    CustomDialog.create(context, R.string.unzip, getString(R.string.auto_unzip_prompt),
-                            android.R.string.ok, 0, android.R.string.cancel, new CustomDialog.ClickListener() {
+                    new AlertDialog.Builder(context)
+                            .setTitle(R.string.unzip)
+                            .setMessage(R.string.auto_unzip_prompt)
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onPositive(int which, View view) {
+                                public void onClick(DialogInterface dialog, int which) {
                                     List<File> files = new ArrayList<File>();
                                     files.add(fFile);
                                     Unzipper.unzip(DirectoryFragment.this, files, null);
                                 }
-
+                            })
+                            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                                 @Override
-                                public void onNeutral() {
-                                }
-
-                                @Override
-                                public void onNegative() {
+                                public void onClick(DialogInterface dialog, int which) {
                                     Utils.openFile((DrawerActivity) getActivity(), fFile, false);
                                 }
-                            }).show(getFragmentManager(), "AUTO_UNZIP_PROMPT");
+                            }).create().show();
                 } else {
                     Utils.openFile((DrawerActivity) getActivity(), file, false);
                 }
@@ -1026,7 +1038,7 @@ public class DirectoryFragment extends Fragment implements FileAdapter.IconClick
                 }
                 break;
             case R.id.delete:
-                Utils.showConfirmDialog(getActivity(), R.string.delete, R.string.confirm_delete, file.getName(), new CustomDialog.SimpleClickListener() {
+                Utils.showConfirmDialog(getActivity(), R.string.delete, R.string.confirm_delete, file.getName(), new Utils.SimpleClickListener() {
                     @Override
                     public void onPositive(int which, View view) {
                         file.delete(new SftpClient.CompletionCallback() {

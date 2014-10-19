@@ -2,8 +2,10 @@ package com.afollestad.cabinet.ui;
 
 import android.animation.ObjectAnimator;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -29,7 +31,6 @@ import com.afollestad.cabinet.cab.base.BaseCab;
 import com.afollestad.cabinet.cab.base.BaseFileCab;
 import com.afollestad.cabinet.file.LocalFile;
 import com.afollestad.cabinet.file.base.File;
-import com.afollestad.cabinet.fragments.CustomDialog;
 import com.afollestad.cabinet.fragments.DirectoryFragment;
 import com.afollestad.cabinet.fragments.NavigationDrawerFragment;
 import com.afollestad.cabinet.fragments.WelcomeFragment;
@@ -249,25 +250,35 @@ public class DrawerActivity extends NetworkedActivity implements BillingProcesso
     private void checkRating() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         if (!prefs.getBoolean("shown_rating_dialog", false)) {
-            CustomDialog.create(this, R.string.rate, getString(R.string.rate_desc), R.string.sure, R.string.later, R.string.no_thanks, new CustomDialog.ClickListener() {
-                @Override
-                public void onPositive(int which, View view) {
-                    PreferenceManager.getDefaultSharedPreferences(DrawerActivity.this)
-                            .edit().putBoolean("shown_rating_dialog", true).commit();
-                    startActivity(new Intent(Intent.ACTION_VIEW)
-                            .setData(Uri.parse("market://details?id=com.afollestad.cabinet")));
-                }
-
-                @Override
-                public void onNeutral() {
-                }
-
-                @Override
-                public void onNegative() {
-                    PreferenceManager.getDefaultSharedPreferences(DrawerActivity.this)
-                            .edit().putBoolean("shown_rating_dialog", true).commit();
-                }
-            }).show(getFragmentManager(), "RATE_DIALOG");
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.rate)
+                    .setMessage(R.string.rate_desc)
+                    .setPositiveButton(R.string.sure, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            PreferenceManager.getDefaultSharedPreferences(DrawerActivity.this)
+                                    .edit().putBoolean("shown_rating_dialog", true).commit();
+                            startActivity(new Intent(Intent.ACTION_VIEW)
+                                    .setData(Uri.parse("market://details?id=com.afollestad.cabinet")));
+                        }
+                    })
+                    .setNeutralButton(R.string.later, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                        }
+                    })
+                    .setNegativeButton(R.string.no_thanks, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.dismiss();
+                            PreferenceManager.getDefaultSharedPreferences(DrawerActivity.this)
+                                    .edit().putBoolean("shown_rating_dialog", true).commit();
+                        }
+                    })
+                    .create()
+                    .show();
         }
     }
 

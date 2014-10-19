@@ -1,6 +1,8 @@
 package com.afollestad.cabinet.ui;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
@@ -14,7 +16,6 @@ import android.widget.EditText;
 import com.afollestad.cabinet.R;
 import com.afollestad.cabinet.file.LocalFile;
 import com.afollestad.cabinet.file.base.File;
-import com.afollestad.cabinet.fragments.CustomDialog;
 import com.afollestad.cabinet.fragments.DetailsDialog;
 import com.afollestad.cabinet.sftp.SftpClient;
 import com.afollestad.cabinet.ui.base.NetworkedActivity;
@@ -91,12 +92,15 @@ public class TextEditor extends NetworkedActivity implements TextWatcher {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            CustomDialog.create(TextEditor.this, R.string.unsupported_extension, getString(R.string.unsupported_extension_desc), new CustomDialog.SimpleClickListener() {
-                                @Override
-                                public void onPositive(int which, View view) {
-                                    finish();
-                                }
-                            }).show(getFragmentManager(), "UNSUPPORTED_DIALOG");
+                            new AlertDialog.Builder(TextEditor.this)
+                                    .setTitle(R.string.unsupported_extension)
+                                    .setMessage(R.string.unsupported_extension_desc)
+                                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            finish();
+                                        }
+                                    }).create().show();
                         }
                     });
                     return;
@@ -209,21 +213,21 @@ public class TextEditor extends NetworkedActivity implements TextWatcher {
 
     private void checkUnsavedChanges() {
         if (mOriginal != null && !mOriginal.equals(mInput.getText().toString())) {
-            CustomDialog.create(this, R.string.unsaved_changes, getString(R.string.unsaved_changes_desc), R.string.yes, 0, R.string.no, new CustomDialog.ClickListener() {
-                @Override
-                public void onNeutral() {
-                }
-
-                @Override
-                public void onNegative() {
-                    finish();
-                }
-
-                @Override
-                public void onPositive(int which, View view) {
-                    save(true);
-                }
-            }).show(getFragmentManager(), "UNSAVED_CHANGES_DIALOG");
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.unsaved_changes)
+                    .setMessage(R.string.unsaved_changes_desc)
+                    .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            save(true);
+                        }
+                    })
+                    .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    }).create().show();
         } else finish();
     }
 

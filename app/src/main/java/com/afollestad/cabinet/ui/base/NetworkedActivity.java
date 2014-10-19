@@ -1,17 +1,17 @@
 package com.afollestad.cabinet.ui.base;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.view.View;
 
 import com.afollestad.cabinet.R;
 import com.afollestad.cabinet.file.CloudFile;
 import com.afollestad.cabinet.file.base.File;
-import com.afollestad.cabinet.fragments.CustomDialog;
 import com.afollestad.cabinet.services.NetworkService;
 
 /**
@@ -37,15 +37,23 @@ public abstract class NetworkedActivity extends ThemableActivity {
         if (mRemoteSwitch != null) {
             host = mRemoteSwitch.getRemote().getHost();
         }
-        CustomDialog.create(this, R.string.disconnect, getString(R.string.disconnect_prompt, host),
-                R.string.yes, 0, R.string.no, new CustomDialog.SimpleClickListener() {
+        new AlertDialog.Builder(this)
+                .setTitle(R.string.disconnect)
+                .setMessage(getString(R.string.disconnect_prompt, host))
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onPositive(int which, View view) {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
                         startService(new Intent(NetworkedActivity.this, NetworkService.class)
                                 .setAction(NetworkService.DISCONNECT_SFTP));
                     }
-                }
-        ).show(getFragmentManager(), "DISCONNECT_CONFIRM");
+                })
+                .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                }).create().show();
     }
 
     protected boolean disconnectOnNotify() {

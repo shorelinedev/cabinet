@@ -95,7 +95,7 @@ public class NavigationDrawerFragment extends Fragment {
             public boolean onLongClick(final int index) {
                 Pins.Item item = mAdapter.getItem(index);
                 Utils.showConfirmDialog(getActivity(), R.string.remove_shortcut,
-                        R.string.confirm_remove_shortcut, item.getDisplay(getActivity()), new CustomDialog.SimpleClickListener() {
+                        R.string.confirm_remove_shortcut, item.getDisplay(getActivity()), new Utils.SimpleClickListener() {
                             @Override
                             public void onPositive(int which, View view) {
                                 Pins.remove(getActivity(), index);
