@@ -66,7 +66,7 @@ public class FileAdapter extends RecyclerView.Adapter<FileAdapter.FileViewHolder
             if (mIconListener != null)
                 mIconListener.onIconClicked(index, file, checked);
         } else {  // menu
-            ContextThemeWrapper context = new ContextThemeWrapper(mContext, R.style.Theme_PopupMenu);
+            ContextThemeWrapper context = new ContextThemeWrapper(mContext, R.style.Widget_AppCompat_Light_PopupMenu);
             PopupMenu mPopupMenu = new PopupMenu(context, view);
             mPopupMenu.inflate(file.isDirectory() ? R.menu.dir_options : R.menu.file_options);
             boolean foundInCopyCab = false;
