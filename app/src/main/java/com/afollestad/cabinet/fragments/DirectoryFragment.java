@@ -12,9 +12,11 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
@@ -29,7 +31,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -259,9 +260,8 @@ public class DirectoryFragment extends Fragment implements FileAdapter.IconClick
         final MenuItem search = menu.findItem(R.id.search);
         if (canShow && !searchMode) {
             assert search != null;
-            SearchView searchView = (SearchView) search.getActionView();
-            // TODO uncomment if statement for Material
-            if (Build.VERSION.SDK_INT < 20) {
+            SearchView searchView = (SearchView) MenuItemCompat.getActionView(search);
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
                 themeSearchView(searchView);
             }
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

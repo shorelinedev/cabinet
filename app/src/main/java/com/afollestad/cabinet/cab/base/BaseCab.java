@@ -1,7 +1,7 @@
 package com.afollestad.cabinet.cab.base;
 
 import android.app.Activity;
-import android.view.ActionMode;
+import android.support.v7.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -20,7 +20,7 @@ public abstract class BaseCab implements ActionMode.Callback, Serializable {
     private transient DirectoryFragment fragment;
 
     public final BaseCab start() {
-        getContext().startActionMode(this);
+        getContext().startSupportActionMode(this);
         return this;
     }
 

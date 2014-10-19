@@ -15,15 +15,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <com.faizmalkani.floatingactionbutton.FloatingActionButton
+        <com.melnykov.fab.FloatingActionButton
             android:id="@+id/fab"
-            app:color="@color/cabinet_accent_color"
-            app:drawable="@drawable/ic_add"
-            android:layout_width="@dimen/fab_size"
-            android:layout_height="@dimen/fab_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="bottom|right"
-            android:layout_marginBottom="16dp"
-            android:layout_marginRight="16dp" />
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_add"
+            app:fab_colorNormal="@color/cabinet_color"
+            app:fab_colorPressed="@color/cabinet_color_darker" />
 
     </FrameLayout>
 
@@ -33,7 +33,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:name="com.afollestad.cabinet.fragments.NavigationDrawerFragment"
-        tools:layout="@layout/fragment_navigation_drawer"
+        tools:layout="@layout/fragment_drawer"
         android:tag="NAV_DRAWER" />
 
 </android.support.v4.widget.DrawerLayout>

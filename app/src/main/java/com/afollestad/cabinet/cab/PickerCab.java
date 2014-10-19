@@ -1,6 +1,6 @@
 package com.afollestad.cabinet.cab;
 
-import android.view.ActionMode;
+import android.support.v7.view.ActionMode;
 
 import com.afollestad.cabinet.R;
 import com.afollestad.cabinet.cab.base.BaseCab;

@@ -4,7 +4,7 @@
     <attr name="title_text" format="color" />
     <attr name="body_text" format="color" />
     <attr name="drawer_background" format="color" />
-    <attr name="divider" format="color" />
+    <attr name="semi_divider" format="color" />
     <attr name="empty_text" format="color" />
 
     <attr name="menu_selector" format="reference" />

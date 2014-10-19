@@ -37,7 +37,7 @@ import com.afollestad.cabinet.ui.base.NetworkedActivity;
 import com.afollestad.cabinet.utils.Pins;
 import com.afollestad.cabinet.utils.ThemeUtils;
 import com.anjlab.android.iab.v3.BillingProcessor;
-import com.faizmalkani.floatingactionbutton.FloatingActionButton;
+import com.melnykov.fab.FloatingActionButton;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
 
 public class DrawerActivity extends NetworkedActivity implements BillingProcessor.IBillingHandler {
@@ -245,8 +245,6 @@ public class DrawerActivity extends NetworkedActivity implements BillingProcesso
         super.onNewIntent(intent);
         processIntent(intent, null);
     }
-
-    private final static String MATERIAL_PROMPT = "material_version_prompt";
 
     private void checkRating() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
