@@ -5,18 +5,15 @@
 
     <style name="Theme.CabinetStatusTranslucent" parent="@style/Theme.Cabinet">
         <item name="android:windowTranslucentStatus">true</item>
-        <item name="android:windowBackground">@android:color/holo_red_dark</item>
     </style>
 
     <style name="Theme.CabinetNavTranslucent" parent="@style/Theme.Cabinet">
         <item name="android:windowTranslucentNavigation">@bool/translucent_nav</item>
-        <item name="android:windowBackground">@android:color/holo_red_dark</item>
     </style>
 
     <style name="Theme.CabinetNavStatusTranslucent" parent="@style/Theme.Cabinet">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">@bool/translucent_nav</item>
-        <item name="android:windowBackground">@android:color/holo_red_dark</item>
     </style>
 
     <!-- Dark Themes -->
