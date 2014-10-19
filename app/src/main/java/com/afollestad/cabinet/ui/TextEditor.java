@@ -48,15 +48,9 @@ public class TextEditor extends NetworkedActivity implements TextWatcher {
         mInput.addTextChangedListener(this);
 
         getActionBar().setDisplayHomeAsUpEnabled(true);
-        DrawerActivity.setupTransparentTints(this);
 
         if (getIntent().getData() != null) load(getIntent().getData());
         else mInput.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    protected boolean allowTranslucentNavbar() {
-        return false;
     }
 
     @Override

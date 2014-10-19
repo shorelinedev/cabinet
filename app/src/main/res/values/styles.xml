@@ -3,29 +3,9 @@
 
     <style name="Theme.Cabinet" parent="@style/CabinetParent" />
 
-    <style name="Theme.CabinetStatusTranslucent" parent="@style/Theme.Cabinet" />
-
-    <style name="Theme.CabinetNavTranslucent" parent="@style/Theme.Cabinet" />
-
-    <style name="Theme.CabinetNavStatusTranslucent" parent="@style/Theme.Cabinet" />
-
-
     <style name="Theme.CabinetDark" parent="@style/CabinetDarkParent" />
 
-    <style name="Theme.CabinetDarkStatusTranslucent" parent="@style/Theme.CabinetDark" />
-
-    <style name="Theme.CabinetDarkNavTranslucent" parent="@style/Theme.CabinetDark" />
-
-    <style name="Theme.CabinetDarkNavStatusTranslucent" parent="@style/Theme.CabinetDark" />
-
-
     <style name="Theme.CabinetTrueBlack" parent="@style/CabinetTrueBlackParent" />
-
-    <style name="Theme.CabinetTrueBlackStatusTranslucent" parent="@style/Theme.CabinetTrueBlack" />
-
-    <style name="Theme.CabinetTrueBlackNavTranslucent" parent="@style/Theme.CabinetTrueBlack" />
-
-    <style name="Theme.CabinetTrueBlackNavStatusTranslucent" parent="@style/Theme.CabinetTrueBlack" />
 
 
     <style name="ButtonCabinet" parent="android:Widget.Holo.Light.Button">

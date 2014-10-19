@@ -45,20 +45,6 @@
             android:dependency="dark_mode"
             android:layout="@layout/preference_custom" />
 
-        <CheckBoxPreference
-            android:key="translucent_statusbar"
-            android:title="@string/translucent_statusbar"
-            android:summary="@string/translucency_not_supported"
-            android:enabled="false"
-            android:layout="@layout/preference_custom" />
-
-        <CheckBoxPreference
-            android:key="translucent_navbar"
-            android:title="@string/translucent_navbar"
-            android:summary="@string/translucency_not_supported"
-            android:enabled="false"
-            android:layout="@layout/preference_custom" />
-
     </PreferenceCategory>
 
 </PreferenceScreen>

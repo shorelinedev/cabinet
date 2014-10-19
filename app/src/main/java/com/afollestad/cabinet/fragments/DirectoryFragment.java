@@ -492,11 +492,6 @@ public class DirectoryFragment extends Fragment implements FileAdapter.IconClick
             }
         }));
 
-        DrawerActivity.setupTranslucentBottomPadding(getActivity(),
-                mRecyclerView, view.findViewById(android.R.id.empty), view.findViewById(android.R.id.progress));
-        DrawerActivity.setupTranslucentTopPadding(getActivity(),
-                view.findViewById(R.id.listFrame), view.findViewById(android.R.id.empty), view.findViewById(android.R.id.progress));
-
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mAdapter = new FileAdapter(getActivity(), this, this, this, mQuery != null);
         mRecyclerView.setAdapter(mAdapter);
@@ -887,7 +882,7 @@ public class DirectoryFragment extends Fragment implements FileAdapter.IconClick
                 if (file.getExtension().equals("zip")) {
                     final File fFile = file;
                     ContextThemeWrapper context = new ContextThemeWrapper(getActivity(),
-                            new ThemeUtils(getActivity(), true).getCurrent());
+                            new ThemeUtils(getActivity()).getCurrent());
                     new AlertDialog.Builder(context)
                             .setTitle(R.string.unzip)
                             .setMessage(R.string.auto_unzip_prompt)

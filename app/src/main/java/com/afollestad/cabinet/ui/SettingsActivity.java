@@ -1,19 +1,13 @@
 package com.afollestad.cabinet.ui;
 
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.ListView;
 
 import com.afollestad.cabinet.R;
 import com.afollestad.cabinet.fragments.AboutDialog;
 import com.afollestad.cabinet.ui.base.ThemableActivity;
-import com.afollestad.cabinet.utils.ThemeUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 /**
@@ -29,34 +23,6 @@ public class SettingsActivity extends ThemableActivity implements AboutDialog.Di
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.settings);
-
-            final CheckBoxPreference translucentStatusbar = (CheckBoxPreference) findPreference("translucent_statusbar");
-            final CheckBoxPreference translucentNavbar = (CheckBoxPreference) findPreference("translucent_navbar");
-
-            translucentStatusbar.setChecked(ThemeUtils.isTranslucentStatusbar(getActivity()));
-            translucentStatusbar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object o) {
-                    PreferenceManager.getDefaultSharedPreferences(getActivity()).edit()
-                            .putBoolean("translucent_navbar", false).commit();
-                    getActivity().recreate();
-                    return true;
-                }
-            });
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                translucentStatusbar.setEnabled(false);
-                translucentStatusbar.setSummary(R.string.translucentstatusbar_disabled);
-            }
-
-            translucentNavbar.setChecked(ThemeUtils.isTranslucentNavbar(getActivity()));
-            translucentNavbar.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-                @Override
-                public boolean onPreferenceChange(Preference preference, Object o) {
-                    getActivity().recreate();
-                    return true;
-                }
-            });
 
             findPreference("dark_mode").setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
@@ -84,14 +50,6 @@ public class SettingsActivity extends ThemableActivity implements AboutDialog.Di
                 }
             });
         }
-
-        @Override
-        public void onViewCreated(View view, Bundle savedInstanceState) {
-            super.onViewCreated(view, savedInstanceState);
-            ListView list = (ListView) view.findViewById(android.R.id.list);
-            DrawerActivity.setupTranslucentTopPadding(getActivity(), list);
-            DrawerActivity.setupTranslucentBottomPadding(getActivity(), list);
-        }
     }
 
     @Override
@@ -101,7 +59,6 @@ public class SettingsActivity extends ThemableActivity implements AboutDialog.Di
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        DrawerActivity.setupTransparentTints(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.preference_activity_custom);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

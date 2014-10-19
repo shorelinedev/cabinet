@@ -1,7 +1,6 @@
 package com.afollestad.cabinet.ui;
 
 import android.animation.ObjectAnimator;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
@@ -9,7 +8,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -18,11 +16,8 @@ import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.afollestad.cabinet.R;
@@ -36,7 +31,6 @@ import com.afollestad.cabinet.fragments.NavigationDrawerFragment;
 import com.afollestad.cabinet.fragments.WelcomeFragment;
 import com.afollestad.cabinet.ui.base.NetworkedActivity;
 import com.afollestad.cabinet.utils.Pins;
-import com.afollestad.cabinet.utils.ThemeUtils;
 import com.anjlab.android.iab.v3.BillingProcessor;
 import com.melnykov.fab.FloatingActionButton;
 import com.readystatesoftware.systembartint.SystemBarTintManager;
@@ -65,54 +59,6 @@ public class DrawerActivity extends NetworkedActivity implements BillingProcesso
     // Both fields used in waitFabInvalidate() so that they can be initialized on UI thread
     private SystemBarTintManager mTintManager;
     SystemBarTintManager.SystemBarConfig mTintConfig;
-
-    public static void setupTransparentTints(Activity context) {
-        if (!ThemeUtils.isTranslucentStatusbar(context)) return;
-        SystemBarTintManager tintManager = new SystemBarTintManager(context);
-        tintManager.setStatusBarTintEnabled(true);
-        //TODO remove if statement for L release
-        int tintColor = ThemeUtils.isTrueBlack(context) ? R.color.cabinet_gray_darker : R.color.cabinet_color_darker;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            tintColor = ThemeUtils.isTrueBlack(context) ? R.color.cabinet_gray : R.color.cabinet_color;
-        }
-        tintManager.setStatusBarTintResource(tintColor);
-    }
-
-    public static void setupTranslucentBottomPadding(Activity context, View... views) {
-        if (!ThemeUtils.isTranslucentNavbar(context)) return;
-        SystemBarTintManager tintManager = new SystemBarTintManager(context);
-        SystemBarTintManager.SystemBarConfig config = tintManager.getConfig();
-        for (View view : views) {
-            view.setPadding(view.getPaddingLeft(), view.getPaddingTop(), view.getPaddingRight(),
-                    view.getPaddingBottom() + config.getPixelInsetBottom());
-        }
-    }
-
-    public static void setupTranslucentTopPadding(Activity context, View... views) {
-        if (!ThemeUtils.isTranslucentStatusbar(context)) return;
-        SystemBarTintManager tintManager = new SystemBarTintManager(context);
-        SystemBarTintManager.SystemBarConfig config = tintManager.getConfig();
-        for (View view : views) {
-            view.setPadding(view.getPaddingLeft(), config.getPixelInsetTop(true), view.getPaddingRight(), view.getPaddingBottom());
-        }
-    }
-
-    public static void setupTranslucentBottomMargin(Activity context, View view, boolean add) {
-        if (!ThemeUtils.isTranslucentNavbar(context)) return;
-        SystemBarTintManager tintManager = new SystemBarTintManager(context);
-        SystemBarTintManager.SystemBarConfig config = tintManager.getConfig();
-        ViewGroup.LayoutParams params = view.getLayoutParams();
-        if (view.getLayoutParams() instanceof FrameLayout.LayoutParams) {
-            int margin = config.getPixelInsetBottom();
-            if (add) margin += ((FrameLayout.LayoutParams) params).bottomMargin;
-            ((FrameLayout.LayoutParams) params).bottomMargin = margin;
-        } else {
-            int margin = config.getPixelInsetBottom();
-            if (add) margin += ((RelativeLayout.LayoutParams) params).bottomMargin;
-            ((RelativeLayout.LayoutParams) params).bottomMargin = margin;
-        }
-        view.setLayoutParams(params);
-    }
 
     public BaseCab getCab() {
         return mCab;
@@ -200,7 +146,6 @@ public class DrawerActivity extends NetworkedActivity implements BillingProcesso
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setupTransparentTints(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_drawer);
 
@@ -236,7 +181,6 @@ public class DrawerActivity extends NetworkedActivity implements BillingProcesso
                 return false;
             }
         });
-        setupTranslucentBottomMargin(this, fab, false);
 
         mBP = new BillingProcessor(this, "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAlPBB2hP/R0PrXtK8NPeDX7QV1fvk1hDxPVbIwRZLIgO5l/ZnAOAf8y9Bq57+eO5CD+ZVTgWcAVrS/QsiqDI/MwbfXcDydSkZLJoFofOFXRuSL7mX/jNwZBNtH0UrmcyFx1RqaHIe9KZFONBWLeLBmr47Hvs7dKshAto2Iy0v18kN48NqKxlWtj/PHwk8uIQ4YQeLYiXDCGhfBXYS861guEr3FFUnSLYtIpQ8CiGjwfU60+kjRMmXEGnmhle5lqzj6QeL6m2PNrkbJ0T9w2HM+bR7buHcD8e6tHl2Be6s/j7zn1Ypco/NCbqhtPgCnmLpeYm8EwwTnH4Yei7ACR7mXQIDAQAB", this);
     }
