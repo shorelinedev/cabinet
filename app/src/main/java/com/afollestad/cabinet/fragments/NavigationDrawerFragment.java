@@ -112,13 +112,6 @@ public class NavigationDrawerFragment extends Fragment {
         return mRecyclerView;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        DrawerActivity.setupTranslucentTopPadding(getActivity(), view);
-        DrawerActivity.setupTranslucentBottomPadding(getActivity(), view);
-    }
-
     public void setUp(int fragmentId, DrawerLayout drawerLayout, boolean selectDefault) {
         mFragmentContainerView = getActivity().findViewById(fragmentId);
         mDrawerLayout = drawerLayout;

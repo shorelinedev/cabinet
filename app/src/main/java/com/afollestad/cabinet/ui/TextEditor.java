@@ -47,7 +47,7 @@ public class TextEditor extends NetworkedActivity implements TextWatcher {
         mInput = (EditText) findViewById(R.id.input);
         mInput.addTextChangedListener(this);
 
-        getActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (getIntent().getData() != null) load(getIntent().getData());
         else mInput.setVisibility(View.VISIBLE);

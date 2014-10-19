@@ -64,9 +64,6 @@ public class WelcomeFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        View root = view.findViewById(R.id.root);
-        DrawerActivity.setupTranslucentTopPadding(getActivity(), root);
-        DrawerActivity.setupTranslucentBottomPadding(getActivity(), root);
         ViewStub fileStub = (ViewStub) view.findViewById(R.id.fileCardStub);
         fileCard = fileStub.inflate();
 

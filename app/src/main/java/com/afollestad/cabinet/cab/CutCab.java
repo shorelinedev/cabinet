@@ -1,9 +1,9 @@
 package com.afollestad.cabinet.cab;
 
 import android.app.ProgressDialog;
+import android.support.v7.view.ActionMode;
 import android.text.Html;
 import android.text.Spanned;
-import android.support.v7.view.ActionMode;
 import android.view.MenuItem;
 import android.widget.Toast;
 

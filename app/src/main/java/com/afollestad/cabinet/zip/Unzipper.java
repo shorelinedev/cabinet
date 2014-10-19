@@ -28,7 +28,7 @@ public class Unzipper {
         ZipEntry entry;
         while ((entry = zis.getNextEntry()) != null) {
             log("Entry: " + entry.getName() + ", size: " + entry.getSize());
-            if(entry.getName().toLowerCase(Locale.getDefault()).endsWith(".ds_store") ||
+            if (entry.getName().toLowerCase(Locale.getDefault()).endsWith(".ds_store") ||
                     entry.getName().startsWith("__MACOSX"))
                 continue;
             File dest = new LocalFile(context.getActivity(), new java.io.File(context.getDirectory().getPath() + "/" + entry.getName()));
