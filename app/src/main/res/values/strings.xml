@@ -203,8 +203,6 @@
         <b>Contents:</b>&nbsp;&nbsp;%3$s<br/>
         <b>Modified:</b>&nbsp;&nbsp;%4$s
     ]]></string>
-    <string name="material_version">Material</string>
-    <string name="material_version_desc">A Material version of Cabinet is available to those running Android Lollipop. Do you want to view the Cabinet Google+ community where this version is posted?</string>
 
     <string-array name="code_extensions" translatable="false">
         <item>java</item>
