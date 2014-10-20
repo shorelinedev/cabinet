@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Cabinet Beta</string>
     <string name="welcome">Witaj!</string>
     <string name="welcome_intro">Witamy w aplikacji Cabinet! Cabinet to prosty menadżer plików, zaprojektowany tak by wyglądał estetycznie 
 i działał jak menadżer plików powinien.\n\n                       Spójrz na ten plik:</string>
@@ -117,11 +116,6 @@ posiada również inne funkcje, takie jak m.in. zdolny dostęp do serwerów popr
     <string name="rate_desc">Czy chcesz ocenić Cabinet w Google Play? Dobre słowo mile widziane!</string>
     <string name="sure">Jasne!</string>
     <string name="no_thanks">Nie, dzięki</string>
-    <string-array name="new_options" translatable="false">
-        <item>@ciąg/plik</item>
-        <item>@ciąg/plik</item>
-        <item>@string/połączenie_zdalne</item>
-    </string-array>
     <string name="file">Plik</string>
     <string name="folder">Folder</string>
     <string name="remote_connection">Połączenie zdalne...</string>
@@ -158,19 +152,6 @@ posiada również inne funkcje, takie jak m.in. zdolny dostęp do serwerów popr
  <b>Nazwa:</b>&nbsp;&nbsp;%1$s<br/><b>Ścieżka:</b>&nbsp;&nbsp;%2$s<br/><b>Zawartość:</b>&nbsp;&nbsp;%3$s<br/><b>Zmodyfikowano:</b>&nbsp;&nbsp;%4$s
     ]]></string>
     <string name="material_version">Material</string>
-    <string-array name="archive_extensions" translatable="false">
-        <item>zip</item>
-        <item>tar.gz</item>
-        <item>tar</item>
-        <item>rar</item>
-        <item>7z</item>
-        <item>gzip</item>
-    </string-array>
-    <string-array name="other_text_extensions" translatable="false">
-        <item>json</item>
-        <item>prop</item>
-        <item>md</item>
-    </string-array>
     <string name="new_file">Nowy plik</string>
     <string name="making_file">Tworzenie pliku...</string>
     <string name="created_file">Plik utworzony %1$s</string>
@@ -191,7 +172,6 @@ posiada również inne funkcje, takie jak m.in. zdolny dostęp do serwerów popr
     <string name="none">Brak</string>
     <string name="archives">Archiwa</string>
     <string name="extension">Rozszerzenie</string>
-    <string name="extension_hint" translatable="false">.txt</string>
     <string name="no_files_filter">Brak wyników filtrowania: %1$s</string>
     <string name="superuser_not_available">Tryb Superuser niedostępny</string>
     <string name="filter_active">Aktywny filtr: %1$s</string>
@@ -200,5 +180,4 @@ posiada również inne funkcje, takie jak m.in. zdolny dostęp do serwerów popr
     <string name="true_black">Prawdziwa Czerń</string>
     <string name="true_black_description">Cabinet będzie używał prawdziwej czerni w wyświetlaczach typu AMOLED.</string>
     <string name="sdcard">Karta SD</string>
-    <string name="mime_textplain">tekst/zwykły</string>
 </resources>

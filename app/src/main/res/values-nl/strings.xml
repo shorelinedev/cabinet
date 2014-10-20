@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name" translatable="false">Cabinet Beta</string>
     <string name="welcome">Welkom</string>
     <string name="welcome_intro">\nWelkom bij Cabinet! Cabinet is een simpele bestandbeheerder ontworpen om gebruikvriendelijk te zijn,\nen om te werken zoals een bestandbeheerder zou moeten. Kijk eens naar het onderstaande bestand: \n</string>
     <string name="welcome_conclusion">Probeer te tikken op het voorbeeld pictogram of de 3-punt icoon. Tikken op het voorbeeld pictogram selecteerd het bestand voor multi acties, dit kan ook gedaan worden door te tikken op en ingedrukt te houden van bestanden. De 3-punt icoon laat een popup menu zien met opties voor het specifieke bestand.\n\nCabinet
@@ -116,11 +115,6 @@
     <string name="rate_desc">Wil je Cabinet beoordelen op Google Play? Goede beoordelingen worden gewaardeerd!</string>
     <string name="sure">Zeker!</string>
     <string name="no_thanks">Nee bedankt</string>
-    <string-array name="new_options" translatable="false">
-        <item>@string/bestand</item>
-        <item>@string/map</item>
-        <item>@string/verbinding_op_afstand</item>
-    </string-array>
     <string name="file">Bestand</string>
     <string name="folder">Map</string>
     <string name="remote_connection">Verbinding op afstand...</string>
@@ -152,19 +146,6 @@ Een minimalistische, vernuftige, mooie bestands beheerder voor Android 4.1 en ho
         <b>Naam:</b>&nbsp;&nbsp;%1$s<br/><b>Locatie:</b>&nbsp;&nbsp;%2$s<br/><b>Inhoud:</b>&nbsp;&nbsp;%3$s<br/><b>Aangepast:</b>&nbsp;&nbsp;%4$s
     ]]></string>
     <string name="material_version">Material</string>
-    <string-array name="archive_extensions" translatable="false">
-        <item>zip</item>
-        <item>tar.gz</item>
-        <item>tar</item>
-        <item>rar</item>
-        <item>7z</item>
-        <item>gzip</item>
-    </string-array>
-    <string-array name="other_text_extensions" translatable="false">
-        <item>json</item>
-        <item>prop</item>
-        <item>md</item>
-    </string-array>
     <string name="new_file">Nieuw bestand</string>
     <string name="making_file">Bestand aan het aanmaken...</string>
     <string name="created_file">Bestand gemaakt: %1$s</string>
@@ -185,7 +166,6 @@ Een minimalistische, vernuftige, mooie bestands beheerder voor Android 4.1 en ho
     <string name="none">Geen</string>
     <string name="archives">Archieven</string>
     <string name="extension">Uitbreiding</string>
-    <string name="extension_hint" translatable="false">.txt</string>
     <string name="no_files_filter">Geen bestanden voor filter: %1$s</string>
     <string name="superuser_not_available">Superuser niet beschikbaar.</string>
     <string name="filter_active">Filter actief:%1$s</string>
@@ -194,5 +174,4 @@ Een minimalistische, vernuftige, mooie bestands beheerder voor Android 4.1 en ho
     <string name="true_black">Echt zwart</string>
     <string name="true_black_description">Cabinet zal echt zwart gebruiken voor AMOLED schermen.</string>
     <string name="sdcard">SD Kaart</string>
-    <string name="mime_textplain">tekst/zonder_opmaak</string>
 </resources>
