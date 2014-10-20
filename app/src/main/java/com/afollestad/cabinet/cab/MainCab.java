@@ -93,7 +93,7 @@ public class MainCab extends BaseFileCab {
         } else if (menuItem.getItemId() == R.id.delete) {
             Utils.showConfirmDialog(getContext(), R.string.delete,
                     getFiles().size() == 1 ? R.string.confirm_delete : R.string.confirm_delete_xfiles,
-                    getFiles().size() == 1 ? getFiles().get(0).getName() : getFiles().size() + "",
+                    getFiles().size() == 1 ? getFiles().get(0).getName() : getFiles().size(),
                     new Utils.SimpleClickListener() {
                         @Override
                         public void onPositive(int which, View view) {

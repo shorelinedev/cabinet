@@ -156,7 +156,7 @@ public class Utils {
         void onNegative();
     }
 
-    public static void showConfirmDialog(Activity context, int title, int message, String replacement, final SimpleClickListener callback) {
+    public static void showConfirmDialog(Activity context, int title, int message, Object replacement, final SimpleClickListener callback) {
 //        CustomDialog.create(context, title, context.getString(message, replacement), R.string.yes, 0, R.string.no, callback).show(context.getFragmentManager(), "CONFIRM");
         new AlertDialog.Builder(context)
                 .setTitle(title)
