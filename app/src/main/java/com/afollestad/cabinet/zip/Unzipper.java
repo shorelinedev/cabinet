@@ -9,12 +9,13 @@ import com.afollestad.cabinet.file.base.File;
 import com.afollestad.cabinet.fragments.DirectoryFragment;
 import com.afollestad.cabinet.utils.Utils;
 
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import java.util.zip.ZipFile;
 
 public class Unzipper {
 
@@ -27,14 +28,13 @@ public class Unzipper {
         try {
             java.io.File folder = new java.io.File(outputFolder);
             if (!folder.exists()) folder.mkdir();
-            ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile.toJavaFile()));
-            ZipEntry ze = zis.getNextEntry();
-            while (ze != null) {
+            ZipFile file = new ZipFile(zipFile.toJavaFile());
+            showProgressDialog(context, file.size());
+            Enumeration<? extends ZipEntry> entries = file.entries();
+            while (entries.hasMoreElements()) {
+                ZipEntry ze = entries.nextElement();
                 String fileName = ze.getName();
-                if (ze.isDirectory()) {
-                    ze = zis.getNextEntry();
-                    continue;
-                }
+                if (ze.isDirectory()) continue;
                 log("Original file: " + fileName);
                 if (fileName.startsWith("/")) fileName = fileName.substring(1);
                 String newPath = outputFolder + java.io.File.separator + fileName;
@@ -43,38 +43,45 @@ public class Unzipper {
                 new java.io.File(newFile.getParent()).mkdirs();
                 FileOutputStream fos = new FileOutputStream(newFile);
                 int len;
-                while ((len = zis.read(buffer)) > 0) {
+                InputStream es = file.getInputStream(ze);
+                while ((len = es.read(buffer)) > 0) {
                     fos.write(buffer, 0, len);
                 }
+                es.close();
                 fos.close();
-                ze = zis.getNextEntry();
+                mDialog.setProgress(mDialog.getProgress() + 1);
             }
-            zis.closeEntry();
-            zis.close();
 
         } catch (IOException ex) {
             ex.printStackTrace();
         }
     }
 
+    private static void showProgressDialog(final DirectoryFragment context, final int count) {
+        context.getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mDialog = new ProgressDialog(context.getActivity());
+                mDialog.setTitle(R.string.unzipping);
+                mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                mDialog.setMax(count);
+                mDialog.setCancelable(true);
+                mDialog.show();
+            }
+        });
+    }
+
     public static void unzip(final DirectoryFragment context, final List<File> files, final Zipper.ZipCallback callback) {
-        mDialog = new ProgressDialog(context.getActivity());
-        mDialog.setTitle(R.string.unzipping);
-        mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-        mDialog.setMax(files.size());
-        mDialog.setCancelable(true);
-        mDialog.show();
         new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     for (File fi : files) {
                         unzip(context, (LocalFile) fi);
-                        if(mDialog == null || !mDialog.isShowing()) {
+                        if (mDialog == null || !mDialog.isShowing()) {
                             // Cancelled
                             break;
                         }
-                        mDialog.setProgress(mDialog.getProgress() + 1);
                     }
                     if (context.getActivity() == null) return;
                     context.getActivity().runOnUiThread(new Runnable() {
@@ -91,7 +98,7 @@ public class Unzipper {
                     context.getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            mDialog.dismiss();
+                            if (mDialog != null) mDialog.dismiss();
                             Utils.showErrorDialog(context.getActivity(), R.string.failed_unzip_file, e);
                         }
                     });
