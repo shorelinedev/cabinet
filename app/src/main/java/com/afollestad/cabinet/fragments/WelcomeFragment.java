@@ -80,7 +80,7 @@ public class WelcomeFragment extends Fragment {
             @Override
             public boolean onLongClick(View view) {
                 icon.performClick();
-                return true;
+                return false;
             }
         });
 
