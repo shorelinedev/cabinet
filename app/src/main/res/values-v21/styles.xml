@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="_LightUIParent" parent="Theme.AppCompat.Light.DarkActionBar">
-        <item name="list_selector">@drawable/list_ripple_selector</item>
-        <item name="list_selector_lighter">@drawable/list_ripple_selector_lighter</item>
-    </style>
-
-    <style name="_DarkUIParent" parent="Theme.AppCompat">
-        <item name="list_selector">@drawable/list_ripple_selector_dark</item>
-        <item name="list_selector_lighter">@drawable/list_ripple_selector_lighter_dark</item>
-    </style>
-
     <style name="ButtonCabinet" parent="android:Widget.Material.Light.Button">
         <item name="android:background">@drawable/rect_button_ripple_selector</item>
         <item name="android:textColor">@color/button_text_selector</item>
