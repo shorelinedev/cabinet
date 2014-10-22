@@ -272,41 +272,46 @@ public class Utils {
         });
         context.getNetworkService().getSftpClient(new NetworkService.SftpGetCallback() {
             @Override
-            public void onSftpClient(SftpClient client) {
+            public void onSftpClient(final SftpClient client) {
                 if (cancelledDownload) return;
-                connectDialog.dismiss();
-                final ProgressDialog downloadDialog = Utils.showProgressDialog(context, R.string.downloading, new DialogInterface.OnCancelListener() {
+                context.runOnUiThread(new Runnable() {
                     @Override
-                    public void onCancel(DialogInterface dialogInterface) {
-                        cancelledDownload = true;
-                    }
-                });
-                client.get(item.getPath(), dest.getPath(), new SftpClient.CancelableCompletionCallback() {
-                    @Override
-                    public void onComplete() {
-                        context.runOnUiThread(new Runnable() {
+                    public void run() {
+                        connectDialog.dismiss();
+                        final ProgressDialog downloadDialog = Utils.showProgressDialog(context, R.string.downloading, new DialogInterface.OnCancelListener() {
                             @Override
-                            public void run() {
-                                if (!cancelledDownload) {
-                                    downloadDialog.dismiss();
-                                    callback.onFile(new LocalFile(context, dest));
-                                } else if (dest.exists()) dest.delete();
+                            public void onCancel(DialogInterface dialogInterface) {
+                                cancelledDownload = true;
                             }
                         });
-                    }
-
-                    @Override
-                    public boolean shouldCancel() {
-                        return cancelledDownload;
-                    }
-
-                    @Override
-                    public void onError(final Exception e) {
-                        context.runOnUiThread(new Runnable() {
+                        client.get(item.getPath(), dest.getPath(), new SftpClient.CancelableCompletionCallback() {
                             @Override
-                            public void run() {
-                                downloadDialog.dismiss();
-                                Utils.showErrorDialog(context, R.string.failed_download_file, e);
+                            public void onComplete() {
+                                context.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (!cancelledDownload) {
+                                            downloadDialog.dismiss();
+                                            callback.onFile(new LocalFile(context, dest));
+                                        } else if (dest.exists()) dest.delete();
+                                    }
+                                });
+                            }
+
+                            @Override
+                            public boolean shouldCancel() {
+                                return cancelledDownload;
+                            }
+
+                            @Override
+                            public void onError(final Exception e) {
+                                context.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        downloadDialog.dismiss();
+                                        Utils.showErrorDialog(context, R.string.failed_download_file, e);
+                                    }
+                                });
                             }
                         });
                     }
