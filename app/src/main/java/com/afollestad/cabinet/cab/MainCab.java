@@ -76,6 +76,52 @@ public class MainCab extends BaseFileCab {
         return super.onPrepareActionMode(actionMode, menu);
     }
 
+    private void shareFiles(List<File> send) {
+        Intent intent = new Intent().setAction(Intent.ACTION_SEND_MULTIPLE);
+        String mime = null;
+        for (File fi : send) {
+            if (mime == null) mime = fi.getMimeType();
+            else if (!fi.getMimeType().equals(mime)) {
+                mime = "*/*";
+                break;
+            }
+        }
+        intent.setType(mime);
+        ArrayList<Uri> files = new ArrayList<Uri>();
+        for (File fi : send)
+            files.add(Uri.fromFile(fi.toJavaFile()));
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
+        try {
+            getContext().startActivity(intent);
+        } catch (ActivityNotFoundException e) {
+            Toast.makeText(getContext(), R.string.no_apps_for_sharing, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void shareNext(final List<File> from, List<File> to) {
+        if (to == null) to = new ArrayList<File>();
+        if (from.size() == 0) {
+            // All files have been moved into 'to'
+            shareFiles(to);
+            return;
+        }
+        final File next = from.get(0);
+        from.remove(0);
+        if (next.isRemote()) {
+            final List<File> fTo = to;
+            Utils.downloadFile(getContext(), next, new Utils.FileCallback() {
+                @Override
+                public void onFile(File file) {
+                    fTo.add(file);
+                    shareNext(from, fTo);
+                }
+            });
+        } else {
+            to.add(next);
+            shareNext(from, to);
+        }
+    }
+
     @Override
     public boolean onActionItemClicked(final ActionMode actionMode, final MenuItem menuItem) {
         if (menuItem.getItemId() == R.id.copy) {
@@ -108,25 +154,7 @@ public class MainCab extends BaseFileCab {
             invalidate();
             return true;
         } else if (menuItem.getItemId() == R.id.share) {
-            Intent intent = new Intent().setAction(Intent.ACTION_SEND_MULTIPLE);
-            String mime = null;
-            for (File fi : getFiles()) {
-                if (mime == null) mime = fi.getMimeType();
-                else if (!fi.getMimeType().equals(mime)) {
-                    mime = "*/*";
-                    break;
-                }
-            }
-            intent.setType(mime);
-            ArrayList<Uri> files = new ArrayList<Uri>();
-            for (File fi : getFiles())
-                files.add(Uri.fromFile(fi.toJavaFile()));
-            intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, files);
-            try {
-                getContext().startActivity(intent);
-            } catch (ActivityNotFoundException e) {
-                Toast.makeText(getContext(), R.string.no_apps_for_sharing, Toast.LENGTH_SHORT).show();
-            }
+            shareNext(getFiles(), null);
         } else if (menuItem.getItemId() == R.id.zip) {
             if (menuItem.getTitle().toString().equals(getContext().getString(R.string.unzip))) {
                 Unzipper.unzip(getFragment(), getFiles(), new Zipper.ZipCallback() {
