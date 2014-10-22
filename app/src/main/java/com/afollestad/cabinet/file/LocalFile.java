@@ -206,33 +206,38 @@ public class LocalFile extends File {
             getContext().getNetworkService().getSftpClient(new NetworkService.SftpGetCallback() {
                 @Override
                 public void onSftpClient(final SftpClient client) {
-                    connectProgress.dismiss();
-                    final ProgressDialog uploadProgress = Utils.showProgressDialog(getContext(), R.string.uploading);
-                    new Thread(new Runnable() {
+                    getContext().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            try {
-                                uploadRecursive(client, LocalFile.this, (CloudFile) dest, false, false);
-                                getContext().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        uploadProgress.dismiss();
-                                        callback.onComplete(dest);
+                            connectProgress.dismiss();
+                            final ProgressDialog uploadProgress = Utils.showProgressDialog(getContext(), R.string.uploading);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        uploadRecursive(client, LocalFile.this, (CloudFile) dest, false, false);
+                                        getContext().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                uploadProgress.dismiss();
+                                                callback.onComplete(dest);
+                                            }
+                                        });
+                                    } catch (final Exception e) {
+                                        e.printStackTrace();
+                                        getContext().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                uploadProgress.dismiss();
+                                                callback.onError(null);
+                                                Utils.showErrorDialog(getContext(), R.string.failed_upload_file, e);
+                                            }
+                                        });
                                     }
-                                });
-                            } catch (final Exception e) {
-                                e.printStackTrace();
-                                getContext().runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        uploadProgress.dismiss();
-                                        callback.onError(null);
-                                        Utils.showErrorDialog(getContext(), R.string.failed_upload_file, e);
-                                    }
-                                });
-                            }
+                                }
+                            }).start();
                         }
-                    }).start();
+                    });
                 }
 
                 @Override
