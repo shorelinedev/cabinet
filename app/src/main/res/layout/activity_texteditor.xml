@@ -32,7 +32,9 @@
             android:inputType="textCapSentences|textMultiLine"
             android:background="@null"
             android:paddingLeft="16dp"
-            android:paddingRight="16dp" />
+            android:paddingRight="16dp"
+            android:minHeight="120dp"
+            android:gravity="top" />
 
     </ScrollView>
 
