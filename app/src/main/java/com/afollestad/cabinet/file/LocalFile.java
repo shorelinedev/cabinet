@@ -95,104 +95,109 @@ public class LocalFile extends File {
 
     @Override
     public void rename(final File newFile, final SftpClient.CompletionCallback callback) {
-        if (newFile.isRemote()) {
-            final ProgressDialog connectProgress = Utils.showProgressDialog(getContext(), R.string.connecting);
-            getContext().getNetworkService().getSftpClient(new NetworkService.SftpGetCallback() {
-                @Override
-                public void onSftpClient(final SftpClient client) {
-                    connectProgress.dismiss();
-                    final ProgressDialog uploadProgress = Utils.showProgressDialog(getContext(), R.string.uploading);
-                    new Thread(new Runnable() {
+        getContext().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (newFile.isRemote()) {
+                    final ProgressDialog connectProgress = Utils.showProgressDialog(getContext(), R.string.connecting);
+                    getContext().getNetworkService().getSftpClient(new NetworkService.SftpGetCallback() {
                         @Override
-                        public void run() {
-                            try {
-                                uploadRecursive(client, LocalFile.this, (CloudFile) newFile, true, true);
+                        public void onSftpClient(final SftpClient client) {
+                            connectProgress.dismiss();
+                            final ProgressDialog uploadProgress = Utils.showProgressDialog(getContext(), R.string.uploading);
+                            new Thread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        uploadRecursive(client, LocalFile.this, (CloudFile) newFile, true, true);
+                                        getContext().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                setPath(newFile.getPath());
+                                                uploadProgress.dismiss();
+                                                callback.onComplete();
+                                            }
+                                        });
+                                    } catch (final Exception e) {
+                                        e.printStackTrace();
+                                        getContext().runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                uploadProgress.dismiss();
+                                                callback.onError(null);
+                                                Utils.showErrorDialog(getContext(), R.string.failed_upload_file, e);
+                                            }
+                                        });
+                                    }
+                                }
+                            }).start();
+                        }
+
+                        @Override
+                        public void onError(final Exception e) {
+                            getContext().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    connectProgress.dismiss();
+                                    callback.onError(null);
+                                    Utils.showErrorDialog(getContext(), R.string.failed_connect_server, e);
+                                }
+                            });
+                        }
+                    }, (CloudFile) newFile);
+                } else {
+                    Utils.checkDuplicates(getContext(), newFile, new Utils.DuplicateCheckResult() {
+                        @Override
+                        public void onResult(final File newFile) {
+                            if (requiresRoot()) {
+                                new Thread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            runAsRoot("mv \"" + getPath() + "\" \"" + newFile.getPath() + "\"");
+                                            getContext().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    setPath(newFile.getPath());
+                                                    callback.onComplete();
+                                                    notifyMediaScannerService(newFile);
+                                                }
+                                            });
+                                        } catch (final Exception e) {
+                                            e.printStackTrace();
+                                            getContext().runOnUiThread(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    Utils.showErrorDialog(getContext(), R.string.failed_rename_file, e);
+                                                    callback.onError(null);
+                                                }
+                                            });
+                                        }
+                                    }
+                                }).start();
+                            } else if (new java.io.File(getPath()).renameTo(newFile.toJavaFile())) {
                                 getContext().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         setPath(newFile.getPath());
-                                        uploadProgress.dismiss();
                                         callback.onComplete();
+                                        notifyMediaScannerService(newFile);
                                     }
                                 });
-                            } catch (final Exception e) {
-                                e.printStackTrace();
+                            } else {
                                 getContext().runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        uploadProgress.dismiss();
+                                        Utils.showErrorDialog(getContext(), R.string.failed_rename_file, new Exception("Unknown error"));
                                         callback.onError(null);
-                                        Utils.showErrorDialog(getContext(), R.string.failed_upload_file, e);
                                     }
                                 });
                             }
                         }
-                    }).start();
-                }
-
-                @Override
-                public void onError(final Exception e) {
-                    getContext().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            connectProgress.dismiss();
-                            callback.onError(null);
-                            Utils.showErrorDialog(getContext(), R.string.failed_connect_server, e);
-                        }
                     });
                 }
-            }, (CloudFile) newFile);
-        } else {
-            Utils.checkDuplicates(getContext(), newFile, new Utils.DuplicateCheckResult() {
-                @Override
-                public void onResult(final File newFile) {
-                    if (requiresRoot()) {
-                        new Thread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    runAsRoot("mv \"" + getPath() + "\" \"" + newFile.getPath() + "\"");
-                                    getContext().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            setPath(newFile.getPath());
-                                            callback.onComplete();
-                                            notifyMediaScannerService(newFile);
-                                        }
-                                    });
-                                } catch (final Exception e) {
-                                    e.printStackTrace();
-                                    getContext().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Utils.showErrorDialog(getContext(), R.string.failed_rename_file, e);
-                                            callback.onError(null);
-                                        }
-                                    });
-                                }
-                            }
-                        }).start();
-                    } else if (new java.io.File(getPath()).renameTo(newFile.toJavaFile())) {
-                        getContext().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setPath(newFile.getPath());
-                                callback.onComplete();
-                                notifyMediaScannerService(newFile);
-                            }
-                        });
-                    } else {
-                        getContext().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                Utils.showErrorDialog(getContext(), R.string.failed_rename_file, new Exception("Unknown error"));
-                                callback.onError(null);
-                            }
-                        });
-                    }
-                }
-            });
-        }
+            }
+        });
     }
 
     private void performCopy(final File dest, final SftpClient.FileCallback callback) {
