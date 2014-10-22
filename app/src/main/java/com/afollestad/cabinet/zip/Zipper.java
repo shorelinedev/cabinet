@@ -24,7 +24,12 @@ public class Zipper {
         Utils.checkDuplicates(context.getActivity(), dest, new Utils.DuplicateCheckResult() {
             @Override
             public void onResult(final File dest) {
-                mDialog = ProgressDialog.show(context.getActivity(), "", context.getString(R.string.zipping), true, false);
+                mDialog = new ProgressDialog(context.getActivity());
+                mDialog.setTitle(context.getString(R.string.zipping));
+                mDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+                mDialog.setMax(LocalFile.getFileCount(files));
+                mDialog.setCancelable(true);
+                mDialog.show();
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -70,13 +75,21 @@ public class Zipper {
     }
 
     private static void writeFiles(String currentDir, ZipOutputStream zout, List<File> files) throws Exception {
+        if (mDialog == null || !mDialog.isShowing()) {
+            // Cancelled
+            return;
+        }
         log("Writing " + files.size() + " files to " + currentDir);
         byte[] buffer = new byte[1024];
         for (File fi : files) {
-            if (fi.isDirectory()) {
+            if (mDialog == null || !mDialog.isShowing()) {
+                // Cancelled
+                break;
+            } else if (fi.isDirectory()) {
                 writeFiles(currentDir + "/" + fi.getName(), zout, fi.listFilesSync(true));
                 continue;
             }
+            mDialog.setProgress(mDialog.getProgress() + 1);
             log(" >>> Writing: " + currentDir + "/" + fi.getName());
             ZipEntry ze = new ZipEntry(currentDir + "/" + fi.getName());
             ze.setSize(fi.length());

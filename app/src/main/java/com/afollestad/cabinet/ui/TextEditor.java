@@ -22,9 +22,10 @@ import com.afollestad.cabinet.ui.base.NetworkedActivity;
 import com.afollestad.cabinet.utils.Utils;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
@@ -107,7 +108,7 @@ public class TextEditor extends NetworkedActivity implements TextWatcher {
                 });
                 Log.v("TextEditor", "Reading file...");
                 try {
-                    BufferedReader br = new BufferedReader(new FileReader(mFile));
+                    BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(mFile), "UTF-8"));
                     String line;
                     final StringBuilder text = new StringBuilder();
                     while ((line = br.readLine()) != null) {

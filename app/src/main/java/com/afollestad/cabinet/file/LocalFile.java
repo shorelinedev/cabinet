@@ -355,6 +355,25 @@ public class LocalFile extends File {
         if (deleteAfter) dir.delete();
     }
 
+    public static int getFileCount(java.io.File parent) {
+        int count = parent.isDirectory() ? 0 : 1;
+        java.io.File[] children = parent.listFiles();
+        if (children != null) {
+            for (java.io.File child : children) {
+                count += getFileCount(child);
+            }
+        }
+        return count;
+    }
+
+    public static int getFileCount(List<File> files) {
+        int count = 0;
+        for (File fi : files) {
+            count += getFileCount(fi.toJavaFile());
+        }
+        return count;
+    }
+
     private void log(String message) {
         Log.v("LocalFile", message);
     }
