@@ -399,7 +399,8 @@ public class DirectoryFragment extends Fragment implements FileAdapter.IconClick
                                                     runOnUiThread(new Runnable() {
                                                         @Override
                                                         public void run() {
-                                                            Utils.showErrorDialog(context, e.getMessage());
+                                                            if (e != null)
+                                                                Utils.showErrorDialog(context, e.getMessage());
                                                         }
                                                     });
                                                 }
