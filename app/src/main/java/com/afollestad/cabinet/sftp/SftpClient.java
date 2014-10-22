@@ -165,7 +165,7 @@ public class SftpClient {
             @Override
             public void run() {
                 try {
-                    mChannel.put(remote, local, new SftpProgressMonitor() {
+                    mChannel.put(local, remote, new SftpProgressMonitor() {
                         @Override
                         public void init(int i, String s, String s2, long l) {
                         }
