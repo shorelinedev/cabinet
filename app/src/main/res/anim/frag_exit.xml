@@ -2,7 +2,8 @@
 <set xmlns:android="http://schemas.android.com/apk/res/android">
 
     <objectAnimator
-        android:duration="200"
+        android:interpolator="@android:anim/linear_interpolator"
+        android:duration="250"
         android:propertyName="x"
         android:valueFrom="0"
         android:valueTo="-1000"
